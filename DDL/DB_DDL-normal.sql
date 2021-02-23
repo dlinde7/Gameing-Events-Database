@@ -27,6 +27,13 @@ GO
 
 
 
+
+-- ********************************************************************************************************************** [General Functions]
+
+-- ********************************************************************************************************************** [General Procs]
+
+
+
 -- ********************************************************************************************************************** [Statuses]
 CREATE TABLE [dbo].[Statuses]
 (
@@ -58,7 +65,7 @@ GO
 -- ************************************************************** [Statuses Procs]
 CREATE PROCEDURE [dbo].[uspInsertStatus]
     @Name nvarchar(40),
-    @Description nvarchar(2000) = NULL,
+    @Description nvarchar(2000),
     @UserId bigint
 AS
 BEGIN TRY
@@ -83,7 +90,61 @@ BEGIN CATCH
     ROLLBACK
     EXECUTE [dbo].[uspGetErrorInfo];
 END CATCH
-GO 
+GO
+
+CREATE PROCEDURE [dbo].[uspUpdateStatus]
+    @StatusId bigint,
+    @Name nvarchar(40),
+    @UserId bigint
+AS
+BEGIN TRY
+    BEGIN TRAN
+        MERGE INTO [dbo].[Statuses] s USING(
+            VALUES
+                (@StatusId, @Name)
+        )
+        AS se (Name, Description)
+        AND se.StatusId = s.StatusId
+        WHEN MATCHED THEN
+            UPDATE SET
+                s.Name = se.Name,
+                s.LastUpdatedBy = @UserId,
+                s.LastUpdatedByDatetime = GETDATE()
+    COMMIT
+END TRY
+BEGIN CATCH
+    ROLLBACK
+    EXECUTE [dbo].[uspGetErrorInfo];
+END CATCH
+GO
+
+CREATE PROCEDURE [dbo].[uspUpdateStatusDescription]
+    @StatusId bigint,
+    @Description nvarchar(1000),
+    @UserId bigint
+AS
+BEGIN TRY
+    BEGIN TRAN
+        MERGE INTO [dbo].[Statuses] s USING(
+            VALUES
+                (@Name, @Description)
+        )
+        AS se (Name, Description)
+        AND se.Name = s.Name
+        WHEN MATCHED THEN
+            UPDATE SET
+                s.Name = se.Name,
+                s.LastUpdatedBy = @UserId,
+                s.LastUpdatedByDatetime = GETDATE()
+    COMMIT
+END TRY
+BEGIN CATCH
+    ROLLBACK
+    EXECUTE [dbo].[uspGetErrorInfo];
+END CATCH
+GO
+
+-- ************************************************************** [Statuses Functions]
 -- ************************************************************** [Statuses Views]
 -- ************************************************************** [Statuses Base Data]
 -- ********************************************************************************************************************** [Statuses]                                                               
@@ -245,6 +306,20 @@ ON [dbo].[Users](
 GO
 
 -- ************************************************************** [Users Procs]
+-- ************************************************************** [Users Functions]
+CREATE FUNCTION [dbo].[udfUserIsAdmin](
+    @UserId bigint,
+    @Status bigint = 1
+)
+RETURNS bigint
+AS
+BEGIN
+    IF (SELECT AdminPrivilagesStatus FROM [dbo].[Access] WHERE AccessId = (SELECT AccessId FROM [dbo].[Users] WHERE UserId = @UserId)) = @Status
+        RETURN 1
+    ELSE
+        RETURN 0
+END
+GO
 -- ************************************************************** [Users Views]
 -- ********************************************************************************************************************** [Users]
                                                                   
