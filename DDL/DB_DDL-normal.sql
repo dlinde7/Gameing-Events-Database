@@ -27,6 +27,13 @@ GO
 ALTER TABLE [dbo].[Statuses]
 ADD CONSTRAINT [PK_Statuses] PRIMARY KEY CLUSTERED ([StatusId] ASC)
 GO
+
+-- ************************************************************** [Access Indexes]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Statuses_Name] ON [dbo].[Statuses]
+(
+	[Name] ASC
+)
+GO
 -- ************************************************************** [Statuses Procs]
 -- ************************************************************** [Statuses Views]
 -- ********************************************************************************************************************** [Statuses]
@@ -34,8 +41,8 @@ GO
 
   
   
--- ********************************************************************************************************************** [AccountType]
-CREATE TABLE [dbo].[AccountType](
+-- ********************************************************************************************************************** [AccountTypes]
+CREATE TABLE [dbo].[AccountTypes](
     [AccountTypeId]                 [bigint] NOT NULL,
     [Name]                          [nvarchar](120) NOT NULL,
     [Description]                   [nvarchar](4000) NOT NULL,
@@ -46,8 +53,14 @@ CREATE TABLE [dbo].[AccountType](
 );
 GO
 -- ************************************************************** [AccountType Contraints]
-ALTER TABLE [dbo].[AccountType]
-ADD CONSTRAINT [PK_AccountType] PRIMARY KEY CLUSTERED ([AccountTypeId] ASC)
+ALTER TABLE [dbo].[AccountTypes]
+ADD CONSTRAINT [PK_AccountTypes] PRIMARY KEY CLUSTERED ([AccountTypeId] ASC)
+GO
+-- ************************************************************** [Access Indexes]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_AccountTypes_Name] ON [dbo].[AccountTypes]
+(
+	[Name] ASC
+)
 GO
 -- ************************************************************* [AccountType Procs]
 -- ************************************************************* [AccountType Views]
@@ -60,6 +73,7 @@ GO
 CREATE TABLE [dbo].[Access](
     [AccessId]                      [bigint] NOT NULL,
     [Password]                      [binary ]NOT NULL,
+    [Username]                      [nvarchar](120) NOT NULL,
     [SecurityKey]                   [nvarchar](120) NOT NULL,
     [DateCreated]                   [datetime] NOT NULL,
     [AdminPrivilagesStatus]         [bigint] NOT NULL,
@@ -82,6 +96,18 @@ GO
 ALTER TABLE [dbo].[Access]  WITH CHECK ADD  CONSTRAINT [FK_Access_IsActive_Status] FOREIGN KEY([IsActiveStatus])
 REFERENCES [dbo].[Statuses] ([StatusId])
 GO
+-- ************************************************************** [Access Indexes]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Access_Username] ON [dbo].[Access]
+(
+    [Username] ASC,
+)
+GO
+CREATE NONCLUSTERED INDEX [IX_Access_LastUpdated] ON [dbo].[Access]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
+GO
 -- ************************************************************* [Access Procs]
 -- ************************************************************* [Access Views]
 -- ********************************************************************************************************************** [Access]
@@ -97,7 +123,6 @@ CREATE TABLE [dbo].[Users]
     [FirstName]                     [nvarchar](120) NOT NULL,
     [LastName]                      [nvarchar](120) NOT NULL,
     [DateOfBirth]                   [date] NOT NULL,
-    [Username]                      [nvarchar](120) NOT NULL,
     [AccountTypeId]                 [bigint] NULL,
     [EmailAddress]                  [nvarchar](120) NOT NULL,
     [ContactNumber]                 [varchar](40) NOT NULL,
@@ -118,10 +143,6 @@ ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_AccessId] FOREIG
 REFERENCES [dbo].[Access] ([AccessId])
 GO
 
--- Make Email unique
--- Make Contact Number unique
--- Make AccessId unique
-
 ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_AccountType] FOREIGN KEY([AccountTypeId])
 REFERENCES [dbo].[AccountTypes] ([AccountTypeId])
 GO
@@ -133,6 +154,40 @@ GO
 ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_ContactNumber_Status] FOREIGN KEY([ContactNumberVerifiedStatus])
 REFERENCES [dbo].[Statuses] ([StatusId])
 GO
+-- ************************************************************** [Users Indexes]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Users_EmailAddress] ON [dbo].[Users]
+(
+    [EmailAddress] ASC
+)
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Users_ContactNumber] ON [dbo].[Users]
+(
+    [ContactNumber] ASC
+)
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Users_Access] ON [dbo].[Users]
+(
+    [AccessId] ASC,
+)
+GO
+CREATE NONCLUSTERED INDEX [IX_Users_FirstName_LastName] ON [dbo].[Users]
+(
+    [FirstName] ASC,
+    [LastName] ASC
+)
+GO
+CREATE NONCLUSTERED INDEX [IX_Users_AccountType] ON [dbo].[Users]
+(
+    [AccountTypeId] ASC
+)
+GO
+CREATE NONCLUSTERED INDEX [IX_Users_LastUpdated] ON [dbo].[Users]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
+GO
+
 -- ************************************************************** [Users Procs]
 -- ************************************************************** [Users Views]
 -- ********************************************************************************************************************** [Users]
@@ -155,6 +210,19 @@ GO
 -- ************************************************************** [SocialNetworks Constraints]
 ALTER TABLE [dbo].[SocialNetworks]
 ADD CONSTRAINT [PK_SocialNetworks] PRIMARY KEY CLUSTERED ([SocialNetworkId] ASC)
+GO
+-- ************************************************************** [SocialNetworks Indexes]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_SocialNetworks_Name] ON [dbo].[SocialNetworks]
+(
+    [Name] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_SocialNetworks_LastUpdated] ON [dbo].[SocialNetworks]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
 GO
 -- ************************************************************** [SocialNetworks Procs]
 -- ************************************************************** [SocialNetworks Views]
@@ -189,6 +257,25 @@ GO
 ALTER TABLE [dbo].[Social]  WITH CHECK ADD  CONSTRAINT [FK_Social_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[Users] ([UserId])
 GO
+-- ************************************************************** [Social Indexes]
+CREATE NONCLUSTERED INDEX [IX_Social_User_SocialNetwork] ON [dbo].[Social]
+(
+    [UserId] ASC,
+    [SocialNetworkId] ASC
+)
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Social_SocialNetwork_Handle] ON [dbo].[Social]
+(
+    [SocialNetworkId] ASC,
+    [Handle] ASC
+)
+GO
+CREATE NONCLUSTERED INDEX [IX_Social_LastUpdated] ON [dbo].[Social]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
+GO
 -- ************************************************************** [Social Procs]
 -- ************************************************************** [Social Views]
 -- ********************************************************************************************************************** [Social]
@@ -202,7 +289,7 @@ CREATE TABLE [dbo].[Games]
     [GameId]                        [bigint] NOT NULL,
     [Name]                          [nvarchar](120) NOT NULL,
     [Description]                   [nvarchar](4000) NOT NULL,
-    [Releasedate]                   [date] NOT NULL,
+    [ReleaseDate]                   [date] NOT NULL,
     [Version]                       [nvarchar](20) NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
     [AddedByDatetime]               [datetime] NOT NULL,
@@ -213,6 +300,18 @@ GO
 -- ************************************************************** [Games Constraints]
 ALTER TABLE [dbo].[Games]
 ADD CONSTRAINT [PK_Games] PRIMARY KEY CLUSTERED ([GameId] ASC)
+GO
+-- ************************************************************** [Games Indexes]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Games_Name_Version] ON [dbo].[Games]
+(
+    [Name] ASC,
+    [Version] ASC
+)
+GO
+CREATE NONCLUSTERED INDEX [IX_Games_Name] ON [dbo].[Games]
+(
+    [Name] ASC
+)
 GO
 -- ************************************************************** [Games Procs]
 -- ************************************************************** [Games Views]
@@ -234,6 +333,12 @@ GO
 -- ************************************************************** [Provinces Contraints]
 ALTER TABLE [dbo].[Provinces]
 ADD CONSTRAINT [PK_Provinces] PRIMARY KEY CLUSTERED ([ProvinceId] ASC)
+GO
+-- ************************************************************** [Provinces Indexes]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Provinces_Name] ON [dbo].[Provinces]
+(
+    [Name] ASC
+)
 GO
 -- ************************************************************** [Provinces Procs]
 -- ************************************************************** [Provinces Views]
@@ -260,6 +365,24 @@ GO
 
 ALTER TABLE [dbo].[Cities]  WITH CHECK ADD  CONSTRAINT [FK_Cities_Province] FOREIGN KEY([ProvinceId])
 REFERENCES [dbo].[Provinces] ([ProvinceId])
+GO
+-- ************************************************************** [Cities Indexes]
+CREATE NONCLUSTERED INDEX [IX_Cities_Name] ON [dbo].[Cities]
+(
+    [Name] ASC
+)
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Cities_Name_Province] ON [dbo].[Cities]
+(
+    [Name] ASC,
+    [ProvinceId] ASC
+)
+GO
+CREATE NONCLUSTERED INDEX [IX_Cities_LastUpdated] ON [dbo].[Cities]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
 GO
 -- ************************************************************** [Cities Procs]
 -- ************************************************************** [Cities Views]
@@ -290,6 +413,18 @@ GO
 ALTER TABLE [dbo].[Teams]  WITH CHECK ADD  CONSTRAINT [FK_Teams_ReceiveNotifications_Status] FOREIGN KEY([ReceieveNotificationsStatus])
 REFERENCES [dbo].[Statuses] ([StatusId])
 GO
+-- ************************************************************** [Teams Indexes]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Teams_Name] ON [dbo].[Teams]
+(
+    [Name] ASC
+)
+GO
+CREATE NONCLUSTERED INDEX [IX_Teams_LastUpdated] ON [dbo].[Teams]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
+GO
 -- ************************************************************** [Teams Procs]
 -- ************************************************************** [Teams Views]
 -- ********************************************************************************************************************** [Teams]
@@ -319,6 +454,25 @@ GO
 
 ALTER TABLE [dbo].[TeamGames]  WITH CHECK ADD  CONSTRAINT [FK_TeamGames_Team] FOREIGN KEY([TeamId])
 REFERENCES [dbo].[Teams] ([TeamId])
+GO
+-- ************************************************************** [TeamGames Indexes]
+CREATE NONCLUSTERED INDEX [IX_TeamGames_Game] ON [dbo].[TeamGames]
+(
+    [GameId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_TeamGames_TeamId] ON [dbo].[TeamGames]
+(
+    [TeamId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_TeamGames_LastUpdated] ON [dbo].[TeamGames]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
 GO
 -- ************************************************************** [TeamGames Procs]
 -- ************************************************************** [TeamGames Views]
@@ -365,6 +519,25 @@ GO
 ALTER TABLE [dbo].[UserTeams]  WITH CHECK ADD  CONSTRAINT [FK_UserTeams_TeamCaptain_Status] FOREIGN KEY([TeamCaptainStatus])
 REFERENCES [dbo].[Statuses] ([StatusId])
 GO
+-- ************************************************************** [UserTeams Indexes]
+CREATE NONCLUSTERED INDEX [IX_UserTeams_User] ON [dbo].[UserTeams]
+(
+    [UserId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_UserTeams_Team] ON [dbo].[UserTeams]
+(
+    [TeamId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_UserTeams_LastUpdated] ON [dbo].[UserTeams]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
+GO
 -- ************************************************************* [UserTeams Procs]
 -- ************************************************************* [UserTeams Views]
 -- ********************************************************************************************************************** [userTeams]
@@ -375,7 +548,7 @@ GO
 -- ********************************************************************************************************************** [AddressDetails]
 CREATE TABLE [dbo].[AddressDetails](
     [AddressDetailId]               [bigint] NOT NULL,
-    [Addressline]                   [nvarchar](120) NOT NULL,
+    [Address]                       [nvarchar](1000) NOT NULL, -- NEEDS WORK
     [CityId]                        [bigint] NULL,
     [UserId]                        [bigint] NOT NULL,
     [IsActiveStatus]                [bigint] NOT NULL,
@@ -393,6 +566,38 @@ GO
 ALTER TABLE [dbo].[AddressDetails]  WITH CHECK ADD  CONSTRAINT [FK_AddressDetails_IsActive_Status] FOREIGN KEY([IsActiveStatus])
 REFERENCES [dbo].[Statuses] ([StatusId])
 GO
+-- ************************************************************** [AddressDetails Indexes]
+CREATE NONCLUSTERED INDEX [IX_AddressDetails_User] ON [dbo].[AddressDetails]
+(
+    [UserId] ASC
+)
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_AddressDetails_Address] ON [dbo].[AddressDetails]
+(
+    [Address] ASC   --NNEDS WORK (CANNOT ENSURE UNIQUE VALUES)
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_AddressDetails_City] ON [dbo].[AddressDetails]
+(
+    [CityId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_AddressDetails_Address_City] ON [dbo].[AddressDetails]
+(
+    [Address] ASC,
+    [CityId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_AddressDetails_LastUpdated] ON [dbo].[AddressDetails]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
+GO
 -- ************************************************************** [AddressDetails Procs]
 -- ************************************************************** [AddressDetails Views]
 -- ********************************************************************************************************************** [AddressDetails]
@@ -405,7 +610,7 @@ CREATE TABLE [dbo].[Venues]
 (
     [VenueId]                       [bigint] NOT NULL,
     [Name]                          [nvarchar](120) NOT NULL,
-    [Addresss]                      [nvarchar](400) NULL,
+    [Address]                       [nvarchar](400) NULL,       -- NEEDS WORK
     [Website]                       [nvarchar](120) NULL,
     [CityId]                        [bigint] NOT NULL,
     [IsActiveStatus]                [bigint] NOT NULL
@@ -426,6 +631,25 @@ GO
 
 ALTER TABLE [dbo].[Venues]  WITH CHECK ADD  CONSTRAINT [FK_Venues_IsActive_Status] FOREIGN KEY([IsActiveStatus])
 REFERENCES [dbo].[Statuses] ([StatusId])
+GO
+-- ************************************************************** [Venues Indexes]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Venues_Name] ON [dbo].[Venues]
+(
+    [Name] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Venues_City] ON [dbo].[Venues]
+(
+    [CityId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Venues_LastUpdated] ON [dbo].[Venues]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
 GO
 -- ************************************************************* [Venues Procs]
 -- ************************************************************* [Venues Views]
@@ -468,6 +692,52 @@ GO
 ALTER TABLE [dbo].[Events]  WITH CHECK ADD  CONSTRAINT [FK_Events_Event_Status] FOREIGN KEY([EventStatus])
 REFERENCES [dbo].[Statuses] ([StatusId])
 GO
+-- ************************************************************** [Events Indexes]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Events_Name] ON [dbo].[Events]
+(
+    [Name] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Events_Game_StartDate_EventStatus] ON [dbo].[Events]
+(
+    [GameId] ASC,
+    [StartDate] ASC,
+    [EventStatus] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Events_StartDate_EndDate] ON [dbo].[Events]
+(
+    [StartDate] ASC,
+    [EndDate] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Events_StartDate_EndDate] ON [dbo].[Events]
+(
+    [StartDate] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Events_EventStatus] ON [dbo].[Events]
+(
+    [EventStatus] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Events_Venue] ON [dbo].[Events]
+(
+    [VenueId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Events_LastUpdated] ON [dbo].[Events]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
+GO
 -- ************************************************************** [Events Procs]
 -- ************************************************************** [Events Views]
 -- ********************************************************************************************************************** [Events]
@@ -479,11 +749,10 @@ GO
 CREATE TABLE [dbo].[EventRegistrations]
 (
     [EventRegistrationId]           [bigint] NOT NULL,
-    [Tmstamp]                       [datetime] NOT NULL,
     [EventId]                       [bigint] NOT NULL,
     [UserTeamId]                    [bigint] NOT NULL,
     [Placement]                     [int] NULL,
-    [IsQualifiedStatus]             [bigint] NOT NULL,
+    [IsApprovedStatus]              [bigint] NOT NULL,
     [IsVerifiedStatus]              [bigint] NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
     [AddedByDatetime]               [datetime] NOT NULL,
@@ -510,6 +779,40 @@ GO
 
 ALTER TABLE [dbo].[EventRegistrations]  WITH CHECK ADD  CONSTRAINT [FK_EventRegistration_IsVerified_Status] FOREIGN KEY([IsVerifiedStatus])
 REFERENCES [dbo].[Statuses] ([StatusId])
+GO
+-- ************************************************************** [EventRegistrations Indexes]
+CREATE NONCLUSTERED INDEX [IX_EventRegistrations_Event] ON [dbo].[EventRegistrations]
+(
+    [EventId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_EventRegistrations_Event_IsApproved_IsVerified] ON [dbo].[EventRegistrations]
+(
+    [EventId] ASC,
+    [IsApprovedStatus] ASC,
+    [IsVerifiedStatus] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_EventRegistrations_UserTeam] ON [dbo].[EventRegistrations]
+(
+    [UserTeamId] ASC
+)
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_EventRegistrations_UserTeam_Event] ON [dbo].[EventRegistrations]
+(
+    [UserTeamId] ASC,
+    [EventId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_EventRegistrations_LastUpdated] ON [dbo].[EventRegistrations]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
 GO
 -- ************************************************************** [EventRegistrations Procs]
 -- ************************************************************** [EventRegistrations Views]
@@ -548,6 +851,38 @@ GO
 
 ALTER TABLE [dbo].[Matches]  WITH CHECK ADD  CONSTRAINT [FK_Matches_Winner] FOREIGN KEY([WinnerId])
 REFERENCES [dbo].[EventRegistrations] ([EventRegistrationId])
+GO
+-- ************************************************************** [Matches Indexes]
+CREATE NONCLUSTERED INDEX [IX_Matches_Team1] ON [dbo].[Matches]
+(
+    [Team1] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Matches_Team2] ON [dbo].[Matches]
+(
+    [Team2] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Matches_Team1_Team2] ON [dbo].[Matches]
+(
+    [Team1] ASC,
+    [Team2] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Matches_Winner] ON [dbo].[Matches]
+(
+    [WinnerId] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Matches_LastUpdated] ON [dbo].[Matches]
+(
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+)
 GO
 -- ************************************************************** [Matches Procs]
 -- ************************************************************** [Matches Views]
