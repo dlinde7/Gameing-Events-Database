@@ -137,83 +137,7 @@ GO
 -- ************************************************************* [AccountType Procs]
 -- ************************************************************* [AccountType Views]
 -- ********************************************************************************************************************** [AccountType]
-                                                                  
 
-
-                                                                   
--- ********************************************************************************************************************** [Access]
-CREATE TABLE [dbo].[Access](
-    [AccessId]                      [bigint] NOT NULL,
-    [Password]                      [binary](1000)NOT NULL,
-    [Username]                      [nvarchar](120) NOT NULL,
-    [SecurityKey]                   [nvarchar](120) NOT NULL,
-    [DateCreated]                   [datetime] NOT NULL,
-    [isAdmin]                       [bit] NOT NULL,
-    [IsActive]                      [bit] NOT NULL,
-    [AddedBy]                       [bigint] NOT NULL,
-    [AddedByDatetime]               [datetime] NOT NULL,
-    [LastUpdatedBy]                 [bigint] NOT NULL,
-    [LastUpdatedByDatetime]         [datetime] NOT NULL
-)
-GO
--- ************************************************************** [Access Contraints]
-ALTER TABLE [dbo].[Access]
-ADD CONSTRAINT [PK_Access] PRIMARY KEY CLUSTERED (
-    [AccessId] ASC
-) WITH (
-    IGNORE_DUP_KEY = OFF
-    , ALLOW_ROW_LOCKS = ON
-    , ALLOW_PAGE_LOCKS = ON
-    , PAD_INDEX = OFF
-    , STATISTICS_NORECOMPUTE = OFF
-) ON [PRIMARY]
-GO
-
--- ************************************************************** [Access Indexes]
-CREATE UNIQUE NONCLUSTERED INDEX [UIX_Access_Username] 
-ON [dbo].[Access](
-    [Username] ASC
-) WITH (
-    IGNORE_DUP_KEY = OFF
-    , ALLOW_ROW_LOCKS = ON
-    , ALLOW_PAGE_LOCKS = ON
-    , FILLFACTOR = 75
-    , PAD_INDEX = ON
-    , STATISTICS_NORECOMPUTE = OFF
-) ON [PRIMARY]
-GO
-
-CREATE UNIQUE NONCLUSTERED INDEX [IX_Access_Username_IsActive]
-ON [dbo].[Access](
-    [Username] ASC,
-    [isActive] ASC
-) WITH (
-    IGNORE_DUP_KEY = OFF
-    , ALLOW_ROW_LOCKS = ON
-    , ALLOW_PAGE_LOCKS = ON
-    , FILLFACTOR = 75
-    , PAD_INDEX = ON
-    , STATISTICS_NORECOMPUTE = OFF
-) ON [PRIMARY]
-GO
-
-CREATE NONCLUSTERED INDEX [IX_Access_LastUpdated] 
-ON [dbo].[Access](
-    [LastUpdatedBy] ASC,
-    [LastUpdatedByDatetime] ASC
-) WITH (
-    IGNORE_DUP_KEY = OFF
-    , ALLOW_ROW_LOCKS = ON
-    , ALLOW_PAGE_LOCKS = ON
-    , FILLFACTOR = 75
-    , PAD_INDEX = ON
-    , STATISTICS_NORECOMPUTE = OFF
-) ON [PRIMARY]
-GO
--- ************************************************************* [Access Procs]
--- ************************************************************* [Access Views]
--- ********************************************************************************************************************** [Access]
-                                                                  
 
 
 
@@ -221,7 +145,6 @@ GO
 CREATE TABLE [dbo].[Users]
 (
     [UserId]                        [bigint] NOT NULL,
-    [AccessId]                      [bigint] NOT NULL,
     [FirstName]                     [nvarchar](120) NOT NULL,
     [LastName]                      [nvarchar](120) NOT NULL,
     [ProfileImageUrl]               [nvarchar](600) NULL,
@@ -250,10 +173,6 @@ ADD CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED (
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[Users]  WITH CHECK 
-ADD CONSTRAINT [FK_Users_AccessId] FOREIGN KEY([AccessId])
-REFERENCES [dbo].[Access] ([AccessId])
-GO
 
 ALTER TABLE [dbo].[Users]  WITH CHECK
 ADD CONSTRAINT [FK_Users_AccountType] FOREIGN KEY([AccountTypeId])
@@ -272,12 +191,6 @@ ON [dbo].[Users](
     , PAD_INDEX = ON
     , STATISTICS_NORECOMPUTE = OFF
 ) ON [PRIMARY]
-GO
-
-CREATE UNIQUE NONCLUSTERED INDEX [UIX_Users_Access] 
-ON [dbo].[Users](
-    [AccessId] ASC
-)
 GO
 
 CREATE NONCLUSTERED INDEX [IX_Users_FirstName_LastName] 
@@ -301,6 +214,90 @@ GO
 
 -- ************************************************************** [Users Procs]
 -- ************************************************************** [Users Functions]
+-- ************************************************************** [Users Views]
+-- ********************************************************************************************************************** [Users]
+                                                                  
+
+
+                                                                   
+-- ********************************************************************************************************************** [Access]
+CREATE TABLE [dbo].[Access](
+    [AccessId]                      [bigint] NOT NULL,
+    [UserId]                        [bigint] NOT NULL,
+    [Password]                      [binary](1000)NOT NULL,
+    [Username]                      [nvarchar](120) NOT NULL,
+    [SecurityKey]                   [nvarchar](120) NOT NULL,
+    [DateCreated]                   [datetime] NOT NULL,
+    [isAdmin]                       [bit] NOT NULL,
+    [IsActive]                      [bit] NOT NULL,
+    [AddedBy]                       [bigint] NOT NULL,
+    [AddedByDatetime]               [datetime] NOT NULL,
+    [LastUpdatedBy]                 [bigint] NOT NULL,
+    [LastUpdatedByDatetime]         [datetime] NOT NULL
+)
+GO
+-- ************************************************************** [Access Contraints]
+ALTER TABLE [dbo].[Access]
+ADD CONSTRAINT [PK_Access] PRIMARY KEY CLUSTERED (
+    [AccessId] ASC
+) WITH (
+    IGNORE_DUP_KEY = OFF
+    , ALLOW_ROW_LOCKS = ON
+    , ALLOW_PAGE_LOCKS = ON
+    , PAD_INDEX = OFF
+    , STATISTICS_NORECOMPUTE = OFF
+) ON [PRIMARY]
+GO
+
+
+ALTER TABLE [dbo].[Access]  WITH CHECK 
+ADD CONSTRAINT [FK_Access_User] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([UserId])
+GO
+-- ************************************************************** [Access Indexes]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_Access_Username] 
+ON [dbo].[Access](
+    [Username] ASC
+) WITH (
+    IGNORE_DUP_KEY = OFF
+    , ALLOW_ROW_LOCKS = ON
+    , ALLOW_PAGE_LOCKS = ON
+    , FILLFACTOR = 75
+    , PAD_INDEX = ON
+    , STATISTICS_NORECOMPUTE = OFF
+) ON [PRIMARY]
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX [IX_Access_User_Username_IsActive]
+ON [dbo].[Access](
+    [UserId] ASC,
+    [Username] ASC,
+    [isActive] ASC
+) WITH (
+    IGNORE_DUP_KEY = OFF
+    , ALLOW_ROW_LOCKS = ON
+    , ALLOW_PAGE_LOCKS = ON
+    , FILLFACTOR = 75
+    , PAD_INDEX = ON
+    , STATISTICS_NORECOMPUTE = OFF
+) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [IX_Access_LastUpdated] 
+ON [dbo].[Access](
+    [LastUpdatedBy] ASC,
+    [LastUpdatedByDatetime] ASC
+) WITH (
+    IGNORE_DUP_KEY = OFF
+    , ALLOW_ROW_LOCKS = ON
+    , ALLOW_PAGE_LOCKS = ON
+    , FILLFACTOR = 75
+    , PAD_INDEX = ON
+    , STATISTICS_NORECOMPUTE = OFF
+) ON [PRIMARY]
+GO
+-- ************************************************************* [Access Functions]
+
 CREATE FUNCTION [dbo].[udfUserIsAdmin](
     @UserId bigint
 )
@@ -311,12 +308,14 @@ BEGIN
 	(
 		SELECT isAdmin
 		FROM [dbo].[Access]
-		WHERE AccessId = (SELECT AccessId FROM [dbo].[Users] WHERE UserId = @UserId)
+		WHERE UserId = @UserId
+        AND isActive = 1 
 	)
 END
 GO
--- ************************************************************** [Users Views]
--- ********************************************************************************************************************** [Users]
+-- ************************************************************* [Access Procs]
+-- ************************************************************* [Access Views]
+-- ********************************************************************************************************************** [Access]
 
 
 
