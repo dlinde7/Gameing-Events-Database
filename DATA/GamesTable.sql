@@ -1,0 +1,8 @@
+INSERT INTO Games (Name, Description, ReleaseDate, Version, AddedBy, AddedByDatetime, LastUpdatedBy, LastUpdatedByDatetime)
+VALUES ('Fortnite', 'Fortnite is a survival game where 100 players fight against each other in player versus player combat to be the last one standing.', '2017-07-21', '15.40.0', 1, GETDATE(), 1, GETDATE()),
+       ('Counter-Strike: Global Offensive', 'Two teams compete in multiple rounds of objective-based game modes with the goal of winning enough rounds to win the match.', '2012-08-21', '2/17/2021', 1, GETDATE(), 1, GETDATE()),
+       ('Dota 2', 'Dota 2 is a multiplayer online battle arena (MOBA) video game in which two teams of five players compete to collectively destroy a large structure defended by the opposing team known as the "Ancient", whilst defending their own.', '2013-07-09', '7.28c', 1, GETDATE(), 1, GETDATE()),
+       ('League of Legends', 'Players work with their team to break the enemy Nexus before the enemy team breaks theirs.', '2009-10-27', '11.4', 1, GETDATE(), 1, GETDATE()),
+       ('Overwatch', ' Described as a "hero shooter", Overwatch assigns players into two teams of six, with each player selecting from a large roster of characters, known as "heroes", with unique abilities.', '2015-10-27', 'January 7 2021 Patch', 1, GETDATE(), 1, GETDATE()),
+       ('PlayerUnkown’s Battlegrounds (PUBG)', 'A battle royale shooter that pits 100 players against each other in a struggle for survival.', '2016-07-30', '10.3', 1, GETDATE(), 1, GETDATE()),
+       ('Tekken 7', 'A fighting game developed and published by Bandai Namco Entertainment.', '2015-03-15', '3.33', 1, GETDATE(), 1, GETDATE());
