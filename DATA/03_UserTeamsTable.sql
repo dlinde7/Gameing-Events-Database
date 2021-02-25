@@ -1,4 +1,4 @@
-INSERT INTO [dbo].[Access] (UserId, TeamId, IsActive, HasEditPrivilages, IsTeamCaptain, AddedBy, AddedByDatetime, LastUpdatedBy, LastUpdatedByDatetime)
+INSERT INTO [dbo].[UserTeams] (UserId, TeamId, IsActive, HasEditPrivilages, IsTeamCaptain, AddedBy, AddedByDatetime, LastUpdatedBy, LastUpdatedByDatetime)
 VALUES (1, 2, 1, 0, 0, 5, '2021-02-25', 5, '2021-02-25')
     ,(2, 2, 1, 0, 0, 5, '2021-02-25', 5, '2021-02-25')
     ,(3, 2, 1, 0, 0, 5, '2021-02-25', 5, '2021-02-25')

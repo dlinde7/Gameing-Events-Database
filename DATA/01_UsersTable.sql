@@ -1,3 +1,4 @@
+-- ******************************************************************************************************************************************************************************************************************************* [Users]
 INSERT INTO [dbo].[Users] (FirstName, LastName, ProfileImageUrl, DateOfBirth, EmailAddress, ContactNumber, IsEmailVerified, IsContactNumberVerified, AddedBy, AddedByDatetime, LastUpdatedBy, LastUpdatedByDatetime)
 VALUES ('Danie', 'Linde', 'http://dummyimage.com/106x103.jpg/ff4444/ffffff', '7/24/1987', 'danielin@bbd.co.za', '540 598 7143', 0, 1, 5, '2020-10-13', 5, '2021-01-11')
         , ('Omer', 'Elgoni', 'http://dummyimage.com/157x178.jpg/5fa2dd/ffffff', '10/31/1982', 'omer@bbd.co.za', '854 307 9927', 0, 1, 5, '2021-02-05', 5, '2020-11-18')
