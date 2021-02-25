@@ -701,7 +701,7 @@ ADD CONSTRAINT [FK_AddressDetails_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[Users] ([UserId])
 GO
 ALTER TABLE [dbo].[AddressDetails]  WITH CHECK
-ADD CONSTRAINT [FK_AddressDetails_City] FOREIGN KEY([CittyId])
+ADD CONSTRAINT [FK_AddressDetails_City] FOREIGN KEY([CityId])
 REFERENCES [dbo].[Cities] ([CityId])
 GO
 -- [AddressDetails Indexes] ************************************************************** 
