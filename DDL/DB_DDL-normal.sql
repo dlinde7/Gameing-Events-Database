@@ -29,7 +29,7 @@ GO
 -- ********************************************************************************************************************** [Statuses]
 CREATE TABLE [dbo].[Statuses]
 (
-    [StatusId]                      [bigint] NOT NULL AUTO_INCREMENT,
+    [StatusId]                      [bigint] NOT NULL IDENTITY(1,1),
     [Name]                          [nvarchar](40) NOT NULL,
     [Description]                   [nvarchar](2000) NULL,
     [AddedBy]                       [bigint] NOT NULL,
@@ -102,11 +102,12 @@ GO
 -- ************************************************************** [Statuses Views]
 -- ************************************************************** [Statuses Base Data]
 -- ********************************************************************************************************************** [Statuses]                                                               
-  
-  
+ 
+ 
+
 -- ********************************************************************************************************************** [AccountTypes]
 CREATE TABLE [dbo].[AccountTypes](
-    [AccountTypeId]                 [bigint] NOT NULL INDENTITY(1,1),
+    [AccountTypeId]                 [bigint] NOT NULL IDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
     [Description]                   [nvarchar](500) NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
@@ -138,7 +139,7 @@ GO
 -- ********************************************************************************************************************** [Users]
 CREATE TABLE [dbo].[Users]
 (
-    [UserId]                        [bigint] NOT NULL INDENTITY(1,1),
+    [UserId]                        [bigint] NOT NULL IDENTITY(1,1),
     [FirstName]                     [nvarchar](120) NOT NULL,
     [LastName]                      [nvarchar](120) NOT NULL,
     [ProfileImageUrl]               [nvarchar](600) NULL,
@@ -215,7 +216,7 @@ GO
                                                                    
 -- ********************************************************************************************************************** [Access]
 CREATE TABLE [dbo].[Access](
-    [AccessId]                      [bigint] NOT NULL INDENTITY(1,1),
+    [AccessId]                      [bigint] NOT NULL IDENTITY(1,1),
     [UserId]                        [bigint] NOT NULL,
     [Password]                      [binary](1000)NOT NULL,
     [Username]                      [nvarchar](120) NOT NULL,
@@ -315,7 +316,7 @@ GO
 -- ********************************************************************************************************************** [SocialNetworks]
 CREATE TABLE [dbo].[SocialNetworks]
 (
-    [SocialNetworkId]               [bigint] NOT NULL INDENTITY(1,1),
+    [SocialNetworkId]               [bigint] NOT NULL IDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
     [BaseUrl]                       [nvarchar](120) NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
@@ -367,7 +368,7 @@ GO
 -- ********************************************************************************************************************** [Social]
 CREATE TABLE [dbo].[Social]
 (
-    [SocialId]                      [bigint] NOT NULL INDENTITY(1,1),
+    [SocialId]                      [bigint] NOT NULL IDENTITY(1,1),
     [UserId]                        [bigint] NOT NULL,
     [SocialNetworkId]               [bigint] NOT NULL,
     [Handle]                        [nvarchar](120) NOT NULL,
@@ -438,7 +439,7 @@ GO
 -- ********************************************************************************************************************** [Games]
 CREATE TABLE [dbo].[Games]
 (
-    [GameId]                        [bigint] NOT NULL  INDENTITY(1,1),
+    [GameId]                        [bigint] NOT NULL  IDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
     [Description]                   [nvarchar](2000) NULL,
     [ReleaseDate]                   [date] NOT NULL,
@@ -491,7 +492,7 @@ GO
 
 -- ********************************************************************************************************************** [Provinces]
 CREATE TABLE [dbo].[Provinces](
-    [ProvinceId]                    [bigint] NOT NULL INDENTITY(1,1),
+    [ProvinceId]                    [bigint] NOT NULL IDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
     [AddedByDatetime]               [datetime] NOT NULL,
@@ -533,7 +534,7 @@ GO
 
 -- ********************************************************************************************************************** [Cities]
 CREATE TABLE [dbo].[Cities](
-    [CityId]                        [bigint] NOT NULL INDENTITY(1,1),
+    [CityId]                        [bigint] NOT NULL IDENTITY(1,1),
     [ProvinceId]                    [bigint] NOT NULL,
     [Name]                          [nvarchar](120) NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
@@ -593,7 +594,7 @@ GO
 -- ********************************************************************************************************************** [Teams]
 CREATE TABLE [dbo].[Teams]
 (
-    [TeamId]                        [bigint] NOT NULL INDENTITY(1,1),
+    [TeamId]                        [bigint] NOT NULL IDENTITY(1,1),
     [Slogan]                        [nvarchar](200) NOT NULL,
     [Name]                          [nvarchar](120) NOT NULL,
     [LogoUrl]                       [nvarchar](600) NULL,
@@ -645,7 +646,7 @@ GO
 -- ********************************************************************************************************************** [TeamGames]
 CREATE TABLE [dbo].[TeamGames]
 (
-    [TeamGameId]                    [bigint] NOT NULL INDENTITY(1,1),
+    [TeamGameId]                    [bigint] NOT NULL IDENTITY(1,1),
     [GameId]                        [bigint] NOT NULL,
     [TeamId]                        [bigint] NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
@@ -702,7 +703,7 @@ GO
 -- ********************************************************************************************************************** [userTeams]
 CREATE TABLE [dbo].[UserTeams]
 (
-    [UserTeamId]                    [bigint] NOT NULL INDENTITY(1,1),
+    [UserTeamId]                    [bigint] NOT NULL IDENTITY(1,1),
     [UserId]                        [bigint] NOT NULL,
     [TeamId]                        [bigint] NOT NULL,
     [IsActive]                      [bit] NOT NULL,
@@ -764,7 +765,7 @@ GO
 
 -- ********************************************************************************************************************** [AddressDetails]
 CREATE TABLE [dbo].[AddressDetails](
-    [AddressDetailId]               [bigint] NOT NULL INDENTITY(1,1),
+    [AddressDetailId]               [bigint] NOT NULL IDENTITY(1,1),
     [Address]                       [nvarchar](500) NOT NULL,
     [CityId]                        [bigint] NULL,
     [UserId]                        [bigint] NOT NULL,
@@ -836,7 +837,7 @@ GO
 -- ********************************************************************************************************************** [Venues]
 CREATE TABLE [dbo].[Venues]
 (
-    [VenueId]                       [bigint] NOT NULL INDENTITY(1,1),
+    [VenueId]                       [bigint] NOT NULL IDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
     [Address]                       [nvarchar](400) NULL,
     [Website]                       [nvarchar](120) NULL,
@@ -901,7 +902,7 @@ GO
 -- ********************************************************************************************************************** [Events]
 CREATE TABLE [dbo].[Events]
 (
-    [EventId]                       [bigint] NOT NULL INDENTITY(1,1),
+    [EventId]                       [bigint] NOT NULL IDENTITY(1,1),
     [VenueId]                       [bigint] NOT NULL,
     [GameId]                        [bigint] NOT NULL,
     [Name]                          [nvarchar](240) NOT NULL,
@@ -1006,7 +1007,7 @@ GO
 -- ********************************************************************************************************************** [EventRegistrations]
 CREATE TABLE [dbo].[EventRegistrations]
 (
-    [EventRegistrationId]           [bigint] NOT NULL INDENTITY(1,1),
+    [EventRegistrationId]           [bigint] NOT NULL IDENTITY(1,1),
     [EventId]                       [bigint] NOT NULL,
     [UserTeamId]                    [bigint] NOT NULL,
     [Placement]                     [int] NULL,
@@ -1091,7 +1092,7 @@ GO
 -- ********************************************************************************************************************** [Matches]
 CREATE TABLE [dbo].[Matches]
 (
-    [MatchId]                       [bigint] NOT NULL INDENTITY(1,1),
+    [MatchId]                       [bigint] NOT NULL IDENTITY(1,1),
     [Team1RegistrationId]           [bigint] NOT NULL,
     [Team2RegistrationId]           [bigint] NOT NULL,
     [WinnerId]                      [bigint] NULL,
