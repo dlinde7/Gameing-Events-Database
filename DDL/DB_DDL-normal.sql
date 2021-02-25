@@ -29,13 +29,13 @@ GO
 -- ********************************************************************************************************************** [Statuses]
 CREATE TABLE [dbo].[Statuses]
 (
-    [StatusId]                      [bigint] NOT NULL,
+    [StatusId]                      [bigint] NOT NULL AUTO_INCREMENT,
     [Name]                          [nvarchar](40) NOT NULL,
     [Description]                   [nvarchar](2000) NULL,
     [AddedBy]                       [bigint] NOT NULL,
     [AddedByDatetime]               [datetime] NOT NULL,
     [LastUpdatedBy]                 [bigint] NOT NULL,
-    [LastUpdatedByDatetime]         [datetime] NOT NULL
+    [LastUpdatedByDatetime]         [datetime] NOT NULL,
 );
 GO
 -- ************************************************************** [Statuses Constraints]
@@ -50,12 +50,6 @@ ADD CONSTRAINT [PK_Statuses] PRIMARY KEY CLUSTERED (
     , STATISTICS_NORECOMPUTE = OFF
 ) ON [PRIMARY]
 GO
-
-CREATE SEQUENCE [dbo].[seqStatusId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
-GO
 -- ************************************************************** [Access Indexes]
 -- ************************************************************** [Statuses Procs]
 CREATE PROCEDURE [dbo].[uspInsertStatus]
@@ -65,8 +59,8 @@ CREATE PROCEDURE [dbo].[uspInsertStatus]
 AS
 BEGIN TRY
     BEGIN TRAN
-        INSERT INTO Statuses (StatusId, Name, Description, AddedBy, AddedByDateTime, LastUpdatedBy, LastUpdatedByDatetime)
-        VALUES (NEXT VALUE FOR [seqStatusId], @Name, @Description, @UserId, GETDATE(), @UserId, GETDATE());
+        INSERT INTO Statuses (Name, Description, AddedBy, AddedByDateTime, LastUpdatedBy, LastUpdatedByDatetime)
+        VALUES (@Name, @Description, @UserId, GETDATE(), @UserId, GETDATE());
     COMMIT
 END TRY
 BEGIN CATCH
@@ -112,7 +106,7 @@ GO
   
 -- ********************************************************************************************************************** [AccountTypes]
 CREATE TABLE [dbo].[AccountTypes](
-    [AccountTypeId]                 [bigint] NOT NULL,
+    [AccountTypeId]                 [bigint] NOT NULL INDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
     [Description]                   [nvarchar](500) NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
@@ -133,12 +127,6 @@ ADD CONSTRAINT [PK_AccountTypes] PRIMARY KEY CLUSTERED (
     , STATISTICS_NORECOMPUTE = OFF
 ) ON [PRIMARY]
 GO
-
-CREATE SEQUENCE [dbo].[seqAccountTypeId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
-GO
 -- ************************************************************** [Access Indexes]
 -- ************************************************************* [AccountType Procs]
 -- ************************************************************* [AccountType Views]
@@ -150,7 +138,7 @@ GO
 -- ********************************************************************************************************************** [Users]
 CREATE TABLE [dbo].[Users]
 (
-    [UserId]                        [bigint] NOT NULL,
+    [UserId]                        [bigint] NOT NULL INDENTITY(1,1),
     [FirstName]                     [nvarchar](120) NOT NULL,
     [LastName]                      [nvarchar](120) NOT NULL,
     [ProfileImageUrl]               [nvarchar](600) NULL,
@@ -217,12 +205,6 @@ ON [dbo].[Users](
     [LastUpdatedByDatetime] ASC
 )
 GO
-
-CREATE SEQUENCE [dbo].[seqUserId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
-GO
 -- ************************************************************** [Users Procs]
 -- ************************************************************** [Users Functions]
 -- ************************************************************** [Users Views]
@@ -233,7 +215,7 @@ GO
                                                                    
 -- ********************************************************************************************************************** [Access]
 CREATE TABLE [dbo].[Access](
-    [AccessId]                      [bigint] NOT NULL,
+    [AccessId]                      [bigint] NOT NULL INDENTITY(1,1),
     [UserId]                        [bigint] NOT NULL,
     [Password]                      [binary](1000)NOT NULL,
     [Username]                      [nvarchar](120) NOT NULL,
@@ -264,12 +246,6 @@ GO
 ALTER TABLE [dbo].[Access]  WITH CHECK 
 ADD CONSTRAINT [FK_Access_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[Users] ([UserId])
-GO
-
-CREATE SEQUENCE [dbo].[seqAccessId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
 GO
 -- ************************************************************** [Access Indexes]
 CREATE UNIQUE NONCLUSTERED INDEX [UIX_Access_Username] 
@@ -339,7 +315,7 @@ GO
 -- ********************************************************************************************************************** [SocialNetworks]
 CREATE TABLE [dbo].[SocialNetworks]
 (
-    [SocialNetworkId]               [bigint] NOT NULL,
+    [SocialNetworkId]               [bigint] NOT NULL INDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
     [BaseUrl]                       [nvarchar](120) NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
@@ -361,11 +337,6 @@ ADD CONSTRAINT [PK_SocialNetworks] PRIMARY KEY CLUSTERED (
 ) ON [PRIMARY]
 GO
 
-CREATE SEQUENCE [dbo].[seqSocialNetworkId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
-GO
 -- ************************************************************** [SocialNetworks Indexes]
 CREATE UNIQUE NONCLUSTERED INDEX [UIX_SocialNetworks_Name] ON [dbo].[SocialNetworks]
 (
@@ -396,7 +367,7 @@ GO
 -- ********************************************************************************************************************** [Social]
 CREATE TABLE [dbo].[Social]
 (
-    [SocialId]                      [bigint] NOT NULL,
+    [SocialId]                      [bigint] NOT NULL INDENTITY(1,1),
     [UserId]                        [bigint] NOT NULL,
     [SocialNetworkId]               [bigint] NOT NULL,
     [Handle]                        [nvarchar](120) NOT NULL,
@@ -428,12 +399,6 @@ GO
 ALTER TABLE [dbo].[Social]  WITH CHECK
 ADD CONSTRAINT [FK_Social_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[Users] ([UserId])
-GO
-
-CREATE SEQUENCE [dbo].[seqSocialId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
 GO
 -- ************************************************************** [Social Indexes]
 CREATE NONCLUSTERED INDEX [IX_Social_User_SocialNetwork]
@@ -473,7 +438,7 @@ GO
 -- ********************************************************************************************************************** [Games]
 CREATE TABLE [dbo].[Games]
 (
-    [GameId]                        [bigint] NOT NULL,
+    [GameId]                        [bigint] NOT NULL  INDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
     [Description]                   [nvarchar](2000) NULL,
     [ReleaseDate]                   [date] NOT NULL,
@@ -497,11 +462,6 @@ ADD CONSTRAINT [PK_Games] PRIMARY KEY CLUSTERED (
 ) ON [PRIMARY]
 GO
 
-CREATE SEQUENCE [dbo].[seqGameId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
-GO
 -- ************************************************************** [Games Indexes]
 CREATE UNIQUE NONCLUSTERED INDEX [UIX_Games_Name_Version]
 ON [dbo].[Games](
@@ -531,7 +491,7 @@ GO
 
 -- ********************************************************************************************************************** [Provinces]
 CREATE TABLE [dbo].[Provinces](
-    [ProvinceId]                    [bigint] NOT NULL,
+    [ProvinceId]                    [bigint] NOT NULL INDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
     [AddedByDatetime]               [datetime] NOT NULL,
@@ -550,12 +510,6 @@ ADD CONSTRAINT [PK_Provinces] PRIMARY KEY CLUSTERED (
     , PAD_INDEX = OFF
     , STATISTICS_NORECOMPUTE = OFF
 ) ON [PRIMARY]
-GO
-
-CREATE SEQUENCE [dbo].[seqProvinceId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
 GO
 -- ************************************************************** [Provinces Indexes]
 CREATE UNIQUE NONCLUSTERED INDEX [UIX_Provinces_Name]
@@ -579,7 +533,7 @@ GO
 
 -- ********************************************************************************************************************** [Cities]
 CREATE TABLE [dbo].[Cities](
-    [CityId]                        [bigint] NOT NULL,
+    [CityId]                        [bigint] NOT NULL INDENTITY(1,1),
     [ProvinceId]                    [bigint] NOT NULL,
     [Name]                          [nvarchar](120) NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
@@ -603,12 +557,6 @@ GO
 
 ALTER TABLE [dbo].[Cities]  WITH CHECK ADD  CONSTRAINT [FK_Cities_Province] FOREIGN KEY([ProvinceId])
 REFERENCES [dbo].[Provinces] ([ProvinceId])
-GO
-
-CREATE SEQUENCE [dbo].[seqCityId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
 GO
 -- ************************************************************** [Cities Indexes]
 CREATE NONCLUSTERED INDEX [IX_Cities_Name]
@@ -645,7 +593,7 @@ GO
 -- ********************************************************************************************************************** [Teams]
 CREATE TABLE [dbo].[Teams]
 (
-    [TeamId]                        [bigint] NOT NULL,
+    [TeamId]                        [bigint] NOT NULL INDENTITY(1,1),
     [Slogan]                        [nvarchar](200) NOT NULL,
     [Name]                          [nvarchar](120) NOT NULL,
     [LogoUrl]                       [nvarchar](600) NULL,
@@ -668,12 +616,6 @@ ADD CONSTRAINT [PK_Teams] PRIMARY KEY CLUSTERED (
     , PAD_INDEX = OFF
     , STATISTICS_NORECOMPUTE = OFF
 ) ON [PRIMARY]
-GO
-
-CREATE SEQUENCE [dbo].[seqTeamId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
 GO
 -- ************************************************************** [Teams Indexes]
 CREATE UNIQUE NONCLUSTERED INDEX [UIX_Teams_Name]
@@ -703,7 +645,7 @@ GO
 -- ********************************************************************************************************************** [TeamGames]
 CREATE TABLE [dbo].[TeamGames]
 (
-    [TeamGameId]                    [bigint] NOT NULL,
+    [TeamGameId]                    [bigint] NOT NULL INDENTITY(1,1),
     [GameId]                        [bigint] NOT NULL,
     [TeamId]                        [bigint] NOT NULL,
     [AddedBy]                       [bigint] NOT NULL,
@@ -731,12 +673,6 @@ GO
 
 ALTER TABLE [dbo].[TeamGames]  WITH CHECK ADD  CONSTRAINT [FK_TeamGames_Team] FOREIGN KEY([TeamId])
 REFERENCES [dbo].[Teams] ([TeamId])
-GO
-
-CREATE SEQUENCE [dbo].[seqTeamGameId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
 GO
 -- ************************************************************** [TeamGames Indexes]
 CREATE NONCLUSTERED INDEX [IX_TeamGames_Game]
@@ -766,7 +702,7 @@ GO
 -- ********************************************************************************************************************** [userTeams]
 CREATE TABLE [dbo].[UserTeams]
 (
-    [UserTeamId]                    [bigint] NOT NULL,
+    [UserTeamId]                    [bigint] NOT NULL INDENTITY(1,1),
     [UserId]                        [bigint] NOT NULL,
     [TeamId]                        [bigint] NOT NULL,
     [IsActive]                      [bit] NOT NULL,
@@ -800,12 +736,6 @@ ALTER TABLE [dbo].[UserTeams]  WITH CHECK
 ADD CONSTRAINT [FK_UserTeams_Team] FOREIGN KEY([TeamId])
 REFERENCES [dbo].[Teams] ([TeamId])
 GO
-
-CREATE SEQUENCE [dbo].[seqUserTeamId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
-GO
 -- ************************************************************** [UserTeams Indexes]
 CREATE NONCLUSTERED INDEX [IX_UserTeams_User]
 ON [dbo].[UserTeams] (
@@ -834,7 +764,7 @@ GO
 
 -- ********************************************************************************************************************** [AddressDetails]
 CREATE TABLE [dbo].[AddressDetails](
-    [AddressDetailId]               [bigint] NOT NULL,
+    [AddressDetailId]               [bigint] NOT NULL INDENTITY(1,1),
     [Address]                       [nvarchar](500) NOT NULL,
     [CityId]                        [bigint] NULL,
     [UserId]                        [bigint] NOT NULL,
@@ -856,12 +786,6 @@ ADD CONSTRAINT [PK_AddressDetails] PRIMARY KEY CLUSTERED (
     , PAD_INDEX = OFF
     , STATISTICS_NORECOMPUTE = OFF
 ) ON [PRIMARY]
-GO
-
-CREATE SEQUENCE [dbo].[seqAddressDetailId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
 GO
 -- ************************************************************** [AddressDetails Indexes]
 CREATE NONCLUSTERED INDEX [IX_AddressDetails_User]
@@ -912,7 +836,7 @@ GO
 -- ********************************************************************************************************************** [Venues]
 CREATE TABLE [dbo].[Venues]
 (
-    [VenueId]                       [bigint] NOT NULL,
+    [VenueId]                       [bigint] NOT NULL INDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
     [Address]                       [nvarchar](400) NULL,
     [Website]                       [nvarchar](120) NULL,
@@ -940,12 +864,6 @@ GO
 ALTER TABLE [dbo].[Venues]  WITH CHECK
 ADD CONSTRAINT [FK_Venues_City] FOREIGN KEY([CityId])
 REFERENCES [dbo].[Cities] ([CityId])
-GO
-
-CREATE SEQUENCE [dbo].[seqVenueId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
 GO
 -- ************************************************************** [Venues Indexes]
 CREATE UNIQUE NONCLUSTERED INDEX [UIX_Venues_Name]
@@ -983,7 +901,7 @@ GO
 -- ********************************************************************************************************************** [Events]
 CREATE TABLE [dbo].[Events]
 (
-    [EventId]                       [bigint] NOT NULL,
+    [EventId]                       [bigint] NOT NULL INDENTITY(1,1),
     [VenueId]                       [bigint] NOT NULL,
     [GameId]                        [bigint] NOT NULL,
     [Name]                          [nvarchar](240) NOT NULL,
@@ -1024,12 +942,6 @@ GO
 ALTER TABLE [dbo].[Events]  WITH CHECK 
 ADD CONSTRAINT [FK_Events_Event_Status] FOREIGN KEY([EventStatus])
 REFERENCES [dbo].[Statuses] ([StatusId])
-GO
-
-CREATE SEQUENCE [dbo].[seqEventId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
 GO
 -- ************************************************************** [Events Indexes]
 CREATE UNIQUE NONCLUSTERED INDEX [UIX_Events_Name]
@@ -1094,7 +1006,7 @@ GO
 -- ********************************************************************************************************************** [EventRegistrations]
 CREATE TABLE [dbo].[EventRegistrations]
 (
-    [EventRegistrationId]           [bigint] NOT NULL,
+    [EventRegistrationId]           [bigint] NOT NULL INDENTITY(1,1),
     [EventId]                       [bigint] NOT NULL,
     [UserTeamId]                    [bigint] NOT NULL,
     [Placement]                     [int] NULL,
@@ -1127,12 +1039,6 @@ GO
 ALTER TABLE [dbo].[EventRegistrations]  WITH CHECK
 ADD CONSTRAINT [FK_EventRegistration_UserTeam] FOREIGN KEY([UserTeamId])
 REFERENCES [dbo].[UserTeams] ([UserTeamId])
-GO
-
-CREATE SEQUENCE [dbo].[seqEventRegistrationId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
 GO
 -- ************************************************************** [EventRegistrations Indexes]
 CREATE NONCLUSTERED INDEX [IX_EventRegistrations_Event]
@@ -1185,7 +1091,7 @@ GO
 -- ********************************************************************************************************************** [Matches]
 CREATE TABLE [dbo].[Matches]
 (
-    [MatchId]                       [bigint] NOT NULL,
+    [MatchId]                       [bigint] NOT NULL INDENTITY(1,1),
     [Team1RegistrationId]           [bigint] NOT NULL,
     [Team2RegistrationId]           [bigint] NOT NULL,
     [WinnerId]                      [bigint] NULL,
@@ -1223,12 +1129,6 @@ GO
 ALTER TABLE [dbo].[Matches]  WITH CHECK
 ADD CONSTRAINT [FK_Matches_Winner] FOREIGN KEY([WinnerId])
 REFERENCES [dbo].[EventRegistrations] ([EventRegistrationId])
-GO
-
-CREATE SEQUENCE [dbo].[seqMatchId]
-    AS bigint
-    START WITH 1
-    INCREMENT BY 1;
 GO
 -- ************************************************************** [Matches Indexes]
 CREATE NONCLUSTERED INDEX [IX_Matches_Team1RegistrationId]
@@ -1282,15 +1182,11 @@ GO
 DROP PROCEDURE [dbo].[uspGetErrorInfo]
 GO
 
-DROP SEQUENCE [dbo].[seqStatusId]
-GO
-
 DROP PROCEDURE [dbo].[uspInsertStatus]
 GO
 
 DROP PROCEDURE [dbo].[uspUpdateStatus]
 GO
-
 
 DROP FUNCTION [dbo].[udfUserIsAdmin]
 GO
