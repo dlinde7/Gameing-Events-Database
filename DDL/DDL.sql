@@ -710,7 +710,7 @@ CREATE TABLE [dbo].[UserTeams]
     [HasEditPrivilages]             [bit] NOT NULL,
     [IsTeamCaptain]                 [bit] NOT NULL,
     [LastUpdatedByDatetime]         [datetime] NULL,
-    [AddedBy[DateTime]              [datetime] NULL,
+    [AddedByDatetime]               [datetime] NULL,
     [AddedBy]                       [bigint] NOT NULL,
     [LastUpdatedBy]                 [bigint] NOT NULL
 );
@@ -787,6 +787,15 @@ ADD CONSTRAINT [PK_AddressDetails] PRIMARY KEY CLUSTERED (
     , PAD_INDEX = OFF
     , STATISTICS_NORECOMPUTE = OFF
 ) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[AddressDetails]  WITH CHECK
+ADD CONSTRAINT [FK_AddressDetails_User] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([UserId])
+GO
+ALTER TABLE [dbo].[AddressDetails]  WITH CHECK
+ADD CONSTRAINT [FK_AddressDetails_City] FOREIGN KEY([CittyId])
+REFERENCES [dbo].[Cities] ([CityId])
 GO
 -- ************************************************************** [AddressDetails Indexes]
 CREATE NONCLUSTERED INDEX [IX_AddressDetails_User]
@@ -1009,7 +1018,7 @@ CREATE TABLE [dbo].[EventRegistrations]
 (
     [EventRegistrationId]           [bigint] NOT NULL IDENTITY(1,1),
     [EventId]                       [bigint] NOT NULL,
-    [UserTeamId]                    [bigint] NOT NULL,
+    [TeamId]                        [bigint] NOT NULL,
     [Placement]                     [int] NULL,
     [IsApproved]                    [bit] NOT NULL,
     [IsVerified]                    [bit] NOT NULL,
@@ -1038,8 +1047,8 @@ REFERENCES [dbo].[Events] ([EventId])
 GO
 
 ALTER TABLE [dbo].[EventRegistrations]  WITH CHECK
-ADD CONSTRAINT [FK_EventRegistration_UserTeam] FOREIGN KEY([UserTeamId])
-REFERENCES [dbo].[UserTeams] ([UserTeamId])
+ADD CONSTRAINT [FK_EventRegistration_Team] FOREIGN KEY([TeamId])
+REFERENCES [dbo].[Teams] ([TeamId])
 GO
 -- ************************************************************** [EventRegistrations Indexes]
 CREATE NONCLUSTERED INDEX [IX_EventRegistrations_Event]
@@ -1056,15 +1065,15 @@ ON [dbo].[EventRegistrations](
 )
 GO
 
-CREATE NONCLUSTERED INDEX [IX_EventRegistrations_UserTeam]
+CREATE NONCLUSTERED INDEX [IX_EventRegistrations_Team]
 ON [dbo].[EventRegistrations](
-    [UserTeamId] ASC
+    [TeamId] ASC
 )
 GO
 
-CREATE UNIQUE NONCLUSTERED INDEX [UIX_EventRegistrations_UserTeam_Event]
+CREATE UNIQUE NONCLUSTERED INDEX [UIX_EventRegistrations_Team_Event]
 ON [dbo].[EventRegistrations](
-    [UserTeamId] ASC,
+    [TeamId] ASC,
     [EventId] ASC
 ) WITH (
     IGNORE_DUP_KEY = OFF
@@ -1276,7 +1285,7 @@ GO
 ALTER TABLE [dbo].[EventRegistration] DROP CONSTRAINT [FK_EventRegistration_Event]
 GO
 
-ALTER TABLE [dbo].[EventRegistration] DROP CONSTRAINT [FK_EventRegistration_UserTeam]
+ALTER TABLE [dbo].[EventRegistration] DROP CONSTRAINT [FK_EventRegistration_Team]
 GO
 
 ALTER TABLE [dbo].[Matches]  DROP CONSTRAINT [PK_Matches] 
@@ -1427,10 +1436,10 @@ GO
 ALTER TABLE [dbo].[EventRegistrations] DROP INDEX [IX_EventRegistrations_Event_IsApproved_IsVerified]
 GO
 
-ALTER TABLE [dbo].[EventRegistrations] DROP INDEX [IX_EventRegistrations_UserTeam]
+ALTER TABLE [dbo].[EventRegistrations] DROP INDEX [IX_EventRegistrations_Team]
 GO
 
-ALTER TABLE [dbo].[EventRegistrations] DROP INDEX [UIX_EventRegistrations_UserTeam_Event]
+ALTER TABLE [dbo].[EventRegistrations] DROP INDEX [UIX_EventRegistrations_Team_Event]
 GO
 
 ALTER TABLE [dbo].[EventRegistrations] DROP INDEX [IX_EventRegistrations_LastUpdated]
