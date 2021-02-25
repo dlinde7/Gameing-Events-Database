@@ -1,4 +1,3 @@
--- [EventRegistrations Funcs] ********************************************************************************************************************** 
 CREATE FUNCTION [dbo].[udfTotalTeamsApprovedForEvent](
     @EventId bigint
 )
