@@ -205,20 +205,6 @@ ADD CONSTRAINT [FK_Access_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[Users] ([UserId])
 GO
 -- [Access Indexes] **************************************************************
-CREATE UNIQUE NONCLUSTERED INDEX [IX_Access_User_IsActive]
-ON [dbo].[Access](
-    [UserId] ASC,
-    [isActive] ASC
-) WITH (
-    IGNORE_DUP_KEY = OFF
-    , ALLOW_ROW_LOCKS = ON
-    , ALLOW_PAGE_LOCKS = ON
-    , FILLFACTOR = 75
-    , PAD_INDEX = ON
-    , STATISTICS_NORECOMPUTE = OFF
-) ON [PRIMARY]
-GO
-
 CREATE NONCLUSTERED INDEX [IX_Access_LastUpdated] 
 ON [dbo].[Access](
     [LastUpdatedBy] ASC,
@@ -732,7 +718,6 @@ GO
 
 CREATE NONCLUSTERED INDEX [IX_AddressDetails_Address_City]
 ON [dbo].[AddressDetails] (
-    [Address] ASC,
     [CityId] ASC
 )
 GO

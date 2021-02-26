@@ -1,5 +1,5 @@
 -- ******************************************************************************************************************************************************************************************************************************* [Users]
-INSERT INTO [dbo].[Users] (FirstName, LastName, ProfileImageUrl, DateOfBirth, EmailAddress, ContactNumber, IsEmailVerified, IsContactNumberVerified, AddedBy, AddedByDatetime, LastUpdatedBy, LastUpdatedByDatetime, Username, AccounType)
+INSERT INTO [dbo].[Users] (FirstName, LastName, ProfileImageUrl, DateOfBirth, EmailAddress, ContactNumber, IsEmailVerified, IsContactNumberVerified, AddedBy, AddedByDatetime, LastUpdatedBy, LastUpdatedByDatetime, Username, AccountType)
 VALUES ('Danie', 'Linde', 'http://dummyimage.com/106x103.jpg/ff4444/ffffff', '7/24/1987', 'danielin@bbd.co.za', '540 598 7143', 0, 1, 5, '2020-10-13', 5, '2021-01-11', 'danielin', 1)
         , ('Omer', 'Elgoni', 'http://dummyimage.com/157x178.jpg/5fa2dd/ffffff', '10/31/1982', 'omer@bbd.co.za', '854 307 9927', 0, 1, 5, '2021-02-05', 5, '2020-11-18', 'omer', 1)
         , ('Siddeeq', 'Laher', 'http://dummyimage.com/115x155.jpg/dddddd/000000', '1/22/1996', 'siddeeql@bbd.co.za', '581 252 9909', 1, 1, 5, '2020-05-11', 5, '2020-07-25', 'sadeeql', 1)
