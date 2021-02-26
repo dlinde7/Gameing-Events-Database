@@ -1,0 +1,16 @@
+insert into Venues (Name, Address, Website, IsActive, CityId, AddedBy, AddedByDatetime, LastUpdatedBy, LastUpdatedByDatetime) 
+values ('Ozu', '79099 Red Cloud Circle', 'people.com.cn', 0, 2, 2, GETDATE(),2, GETDATE()),
+('Yambee', '8 Di Loreto Crossing', 'dagondesign.com', 0, 1, 2, GETDATE(),2, GETDATE()),
+('Skidoo', '03281 Westport Way', 'mit.edu', 1, 4, 2, GETDATE(),2, GETDATE()),
+('Fivebridge', '372 Morrow Terrace', 'un.org', 1, 4, 2, GETDATE(),2, GETDATE()),
+('Jabberbean', '5 Fair Oaks Alley', 'hugedomains.com', 1, 1, 2, GETDATE(),2, GETDATE()),
+('Topicblab', '3 Caliangt Hill', 'discuz.net', 1, 5, 2, GETDATE(),2, GETDATE()),
+('Eidel', '71020 Norway Maple Crossing', 'liveinternet.ru', 0, 5, 2, GETDATE(),2, GETDATE()),
+('Edgeclub', '38687 Schurz Circle', 'arizona.edu', 0, 6, 2, GETDATE(),2, GETDATE()),
+('Fatz', '6212 Maywood Avenue', 'bizjournals.com', 0, 1, 2, GETDATE(),2, GETDATE()),
+('Skalith', '67501 Waywood Crossing', 'hp.com', 1, 1, 2, GETDATE(),2, GETDATE()),
+('Yombu', '0930 Wayridge Street', 'pen.io', 0, 3, 2, GETDATE(),2, GETDATE()),
+('Skiba', '5796 Vernon Alley', 'yahoo.com', 0, 5, 2, GETDATE(),2, GETDATE()),
+('Jayo', '90578 Reindahl Point', 'clickbank.net', 1, 3, 2, GETDATE(),2, GETDATE()),
+('Vitz', '8 Redwing Plaza', 'exblog.jp', 1, 2, 2, GETDATE(),2, GETDATE()),
+('Yabox', '9022 Graedel Parkway', 'independent.co.uk', 0, 3, 2, GETDATE(),2, GETDATE())
