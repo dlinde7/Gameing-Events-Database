@@ -753,7 +753,6 @@ CREATE TABLE [dbo].[Venues]
 (
     [VenueId]                       [bigint] NOT NULL IDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
-    [Address]                       [nvarchar](400) NULL,
     [Website]                       [nvarchar](120) NULL,
     [CityId]                        [bigint] NOT NULL,
     [IsActive]                      [bit] NOT NULL,

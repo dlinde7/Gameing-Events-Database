@@ -40,3 +40,18 @@ RETURN
 	FROM [dbo].[vEventsInfo]
 	WHERE Status = (SELECT Name FROM Statuses WHERE StatusId = @StatusId)
 GO
+
+CREATE FUNCTION [dbo].[udfConfirmTeamGame](
+    @TeamId bigint,
+    @GameId bigint
+)
+RETURNS int
+AS
+RETURN
+    RETURN (
+        SELECT COUNT(*)
+        FROM [dbo].[TeamGames]
+        WHERE TeamId = @TeamId
+        AND GameId = @GameId
+    )
+GO
