@@ -205,20 +205,6 @@ ADD CONSTRAINT [FK_Access_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[Users] ([UserId])
 GO
 -- [Access Indexes] **************************************************************
-CREATE UNIQUE NONCLUSTERED INDEX [IX_Access_User_IsActive]
-ON [dbo].[Access](
-    [UserId] ASC,
-    [isActive] ASC
-) WITH (
-    IGNORE_DUP_KEY = OFF
-    , ALLOW_ROW_LOCKS = ON
-    , ALLOW_PAGE_LOCKS = ON
-    , FILLFACTOR = 75
-    , PAD_INDEX = ON
-    , STATISTICS_NORECOMPUTE = OFF
-) ON [PRIMARY]
-GO
-
 CREATE NONCLUSTERED INDEX [IX_Access_LastUpdated] 
 ON [dbo].[Access](
     [LastUpdatedBy] ASC,
@@ -701,7 +687,7 @@ ADD CONSTRAINT [FK_AddressDetails_User] FOREIGN KEY([UserId])
 REFERENCES [dbo].[Users] ([UserId])
 GO
 ALTER TABLE [dbo].[AddressDetails]  WITH CHECK
-ADD CONSTRAINT [FK_AddressDetails_City] FOREIGN KEY([CittyId])
+ADD CONSTRAINT [FK_AddressDetails_City] FOREIGN KEY([CityId])
 REFERENCES [dbo].[Cities] ([CityId])
 GO
 -- [AddressDetails Indexes] ************************************************************** 
@@ -732,7 +718,6 @@ GO
 
 CREATE NONCLUSTERED INDEX [IX_AddressDetails_Address_City]
 ON [dbo].[AddressDetails] (
-    [Address] ASC,
     [CityId] ASC
 )
 GO
@@ -753,7 +738,6 @@ CREATE TABLE [dbo].[Venues]
 (
     [VenueId]                       [bigint] NOT NULL IDENTITY(1,1),
     [Name]                          [nvarchar](120) NOT NULL,
-    [Address]                       [nvarchar](400) NULL,
     [Website]                       [nvarchar](120) NULL,
     [CityId]                        [bigint] NOT NULL,
     [IsActive]                      [bit] NOT NULL,

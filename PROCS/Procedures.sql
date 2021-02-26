@@ -105,6 +105,7 @@ CREATE PROCEDURE [dbo].[uspInsertNewAccess]
     @Status bigint
 AS
 BEGIN TRY
+    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
     BEGIN TRAN
         UPDATE [dbo].[Access]
         SET isActive = 0
