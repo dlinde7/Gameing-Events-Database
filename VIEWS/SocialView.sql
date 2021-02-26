@@ -1,5 +1,6 @@
 CREATE VIEW SocialMedia
-AS SELECT FirstName, LastName, Handle, Link, Name
-FROM Users a, Social b, SocialNetworks c
-WHERE a.UserId=b.UserId
-AND c.SocialNetworkId=b.SocialNetworkId;
+AS
+SELECT FirstName, LastName, Handle, Link, Name FROM Social a
+	INNER JOIN Users b ON b.UserId=a.UserId
+	INNER JOIN SocialNetworks c ON c.SocialNetworkId=a.SocialNetworkId
+GO
